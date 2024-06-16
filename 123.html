@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحميل ملف .m3u</title>
+    <script>
+        function generateM3U() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var username = urlParams.get('username');
+            var password = urlParams.get('password');
+
+            if (!username || !password) {
+                document.getElementById('content').innerText = 'خطأ: لم يتم تقديم اسم المستخدم أو كلمة المرور بشكل صحيح.';
+                return;
+            }
+
+            var m3uContent = `#EXTM3U\n#EXTINF:-1,IPTV Channel\nhttps://example.com/get.php?username=${username}&password=${password}&type=m3u_plus&output=ts`;
+            var blob = new Blob([m3uContent], { type: 'audio/mpegurl' });
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'iptv.m3u';
+            link.click();
+
+            document.getElementById('content').innerText = 'تم إنشاء ملف .m3u بنجاح. إذا لم يبدأ التحميل تلقائيًا، انقر على الرابط أدناه:';
+            var manualLink = document.createElement('a');
+            manualLink.href = URL.createObjectURL(blob);
+            manualLink.download = 'iptv.m3u';
+            manualLink.innerText = 'تحميل ملف .m3u';
+            document.getElementById('content').appendChild(document.createElement('br'));
+            document.getElementById('content').appendChild(manualLink);
+        }
+    </script>
+</head>
+<body onload="generateM3U()">
+    <div id="content" style="text-align: center; margin-top: 50px;">
+        <p>جاري توليد ملف .m3u...</p>
+    </div>
+</body>
+</html>
